@@ -1,32 +1,31 @@
 import { Alert, Stack } from '@mui/material';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { closeAlert } from '../store/modules/alert';
 
-interface FeedbackProps {
-    msg: string;
-    type: 'error' | 'success' | 'info';
-    show: boolean;
-    actionCancel: () => void;
-}
+const Feedback = () => {
+  const alert = useAppSelector((state) => state.alert);
+  const dispatch = useAppDispatch();
 
-const Feedback: React.FC<FeedbackProps> = ({
-  msg, type, show, actionCancel,
-}) => {
   useEffect(() => {
-    if (show) {
-      setTimeout(() => {
-        actionCancel();
-      }, 2000);
+    if (alert.show) {
+      setTimeout(() => dispatch(closeAlert()), 5000);
     }
-  }, [show]);
+  }, [alert]);
+
   return (
-    <Stack
-      sx={{
-        width: '300px', position: 'fixed', top: '65px', right: '35px',
-      }}
-      spacing={2}
-    >
-      {show && <Alert severity={type}>{msg}</Alert>}
-    </Stack>
+    alert.show
+      ? (
+        <Stack
+          sx={{
+            width: '300px', position: 'fixed', top: '65px', right: '35px',
+          }}
+          spacing={2}
+        >
+          <Alert severity={alert.type}>{alert.msg}</Alert>
+        </Stack>
+      ) : undefined
+
   );
 };
 

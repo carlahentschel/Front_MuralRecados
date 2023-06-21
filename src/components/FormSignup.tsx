@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
 import { createUser } from '../store/modules/userLogged';
+import { setAlert } from '../store/modules/alert';
 
 const schemaCreateAccount = z.object({
   email: z.string().email(),
@@ -31,10 +32,11 @@ export function FormSignup() {
   });
 
   const onSubmit: SubmitHandler<TCreateAccount> = (data) => {
-    console.log(data);
-
-    // eslint-disable-next-line no-use-before-define
     dispatch(createUser(data));
+    dispatch(setAlert({
+      msg: 'Usuário criado com sucesso',
+      type: 'success',
+    }));
   };
 
   return (

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userLogin } from '../store/modules/userLogged';
+import { setAlert } from '../store/modules/alert';
 
 const schemaLogin = z.object({
   email: z.string().email(),
@@ -15,7 +16,9 @@ type TLogin = z.infer<typeof schemaLogin>;
 
 export function FormSignin() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.userLogged);
+
   const {
     register,
     handleSubmit,
@@ -24,16 +27,22 @@ export function FormSignin() {
     resolver: zodResolver(schemaLogin),
   });
 
-  const navigate = useNavigate();
   useEffect(() => {
     if (user.id) {
       return navigate('/home');
     }
   }, [user]);
 
-  const onSubmit: SubmitHandler<TLogin> = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (!user.id) {
+      dispatch(setAlert({
+        msg: 'Esta conta não existe.',
+        type: 'error',
+      }));
+    }
+  }, [user]);
 
+  const onSubmit: SubmitHandler<TLogin> = (data) => {
     dispatch(userLogin(data));
   };
 

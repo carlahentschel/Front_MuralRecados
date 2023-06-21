@@ -1,26 +1,25 @@
-import { useEffect, useState } from 'react';
 import {
   Button,
   ButtonGroup,
-  Card, CardActions, CardContent, Container, Divider,
-  Grid, IconButton, Typography,
+  Container, Divider,
+  Grid, Typography,
 } from '@mui/material';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import {
-  createTask, deleteTask, getTasks, taskAdapter,
+  taskAdapter,
 } from '../store/modules/tasks';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store/hooks';
+import { CustomCard } from '../components/CustomCard';
 
-export function Home() {
+export function Favorites() {
   const user = useAppSelector((state) => state.userLogged);
   const tasks = useAppSelector(taskAdapter.selectAll);
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleAllTasks = () => {
+    navigate('/home');
+  };
 
   return (
     <Grid container>
@@ -31,47 +30,18 @@ export function Home() {
         <Container sx={{ marginTop: '20px' }}>
 
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button>VOLTAR PARA TODOS OS RECADOS</Button>
+            <Button onClick={handleAllTasks}>VOLTAR PARA TODOS OS RECADOS</Button>
           </ButtonGroup>
           <Typography variant="h5" marginTop={3}>Organize e gerencie sua agenda para deixar sua rotina mais tranquila.</Typography>
           <Divider />
           <Grid container gap={2} marginTop={3}>
             <Grid item xs={12} sm={6} md={3}>
-              <Card sx={{ maxWidth: 380 }}>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Title
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Description
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" marginTop={2}>
-                    {dayjs(new Date()).format('DD/MM/YYYY')}
-                  </Typography>
-
-                </CardContent>
-                <CardActions>
-                  <IconButton>
-                    <CheckBoxIcon />
-                  </IconButton>
-                  <IconButton>
-                    <CheckBoxOutlineBlankIcon />
-                  </IconButton>
-                  <IconButton color="error">
-                    <Favorite />
-                  </IconButton>
-                  <IconButton>
-                    <FavoriteBorder />
-                  </IconButton>
-                  <IconButton color="success">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="warning">
-                    <DeleteIcon />
-                  </IconButton>
-
-                </CardActions>
-              </Card>
+              <Typography>aqui tem que filtrar os recados favoritos</Typography>
+              {tasks.filter((t) => t.favorite).map((t) => (
+                <Grid key={t.idTask} item xs={12} sm={6} md={3}>
+                  <CustomCard task={t} />
+                </Grid>
+              ))}
             </Grid>
           </Grid>
         </Container>

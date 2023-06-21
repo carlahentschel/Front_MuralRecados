@@ -37,15 +37,15 @@ export const userLogin = createAsyncThunk('userLogged/login', async (data: TUser
 export const slice = createSlice({
   name: 'userLogged',
   initialState: {} as TUser,
-  reducers: {},
+  reducers: {
+    logout: () => ({ id: '', name: '', token: '' }),
+  },
   extraReducers(builder) {
     builder.addCase(createUser.fulfilled, (state, action) => {
       // feedback pro usuário
       window.location.href = '/';
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      console.log(action);
-
       state.name = action.payload.data.name;
       state.id = action.payload.data.id;
       state.token = action.payload.data.token;
@@ -53,6 +53,6 @@ export const slice = createSlice({
   },
 });
 
-// export const {} = slice.actions;
+export const { logout } = slice.actions;
 
 export const userLoggedReducer = slice.reducer;

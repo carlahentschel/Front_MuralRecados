@@ -1,20 +1,18 @@
-import { useNavigate } from 'react-router-dom';
 import {
   AppBar, Container, Toolbar, Typography, Box, Button,
 } from '@mui/material';
 import { useAppDispatch } from '../store/hooks';
+import { logout } from '../store/modules/userLogged';
 
 interface ResponsiveAppBarProps {
   userLogged: string;
 }
 
 function ResponsiveAppBar({ userLogged }: ResponsiveAppBarProps) {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleCloseUserMenu = () => {
-    // dispatch(logout());
-    navigate('/');
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -59,7 +57,7 @@ function ResponsiveAppBar({ userLogged }: ResponsiveAppBarProps) {
           </Typography>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Button onClick={handleCloseUserMenu} color="inherit">
+            <Button onClick={handleLogout} color="inherit">
               Sair
             </Button>
           </Box>

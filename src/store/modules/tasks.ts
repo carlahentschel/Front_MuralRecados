@@ -2,8 +2,8 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/too
 import { apirecados } from '../../service/api';
 import { RootState } from '../rootReducer';
 
-type TTask = {
-    id: string,
+export type TTask = {
+    idTask: string,
     title: string,
     description: string,
     date: Date,
@@ -11,8 +11,11 @@ type TTask = {
     finished: boolean
 }
 
+export type TCreateTask = Omit<TTask, 'idTask' | 'favorite' | 'finished'>;
+
 type TRequestCreate = {
-    task: Omit<TTask, 'id' | 'favorite' | 'finished'>,
+    idUser: string,
+    task: TCreateTask,
     authorization: string
 }
 
@@ -34,26 +37,26 @@ type TDeleteTask = {
 }
 
 const adapter = createEntityAdapter<TTask>({
-  selectId: (item) => item.id,
+  selectId: (item) => item.idTask,
 });
 
-export const createTask = createAsyncThunk('tasks/create', async ({ task, authorization }: TRequestCreate) => {
-  const response = await apirecados.post('/tasks', task, { headers: { Authorization: `Bearer ${authorization}` } });
+export const createTask = createAsyncThunk('tasks/create', async ({ idUser, task, authorization }: TRequestCreate) => {
+  const response = await apirecados.post('/tasks', { ...task, userId: idUser }, { headers: { AuthToken: authorization } });
   return response;
 });
 
 export const getTasks = createAsyncThunk('tasks/get', async ({ idUser, authorization }: TRequestGet) => {
-  const response = await apirecados.get(`/tasks/${idUser}`, { headers: { Authorization: `Bearer ${authorization}` } });
+  const response = await apirecados.get(`/tasks/${idUser}`, { headers: { AuthToken: authorization } });
   return response;
 });
 
 export const updateTask = createAsyncThunk('tasks/update', async ({ idUser, task, authorization }:TUpdateTask) => {
-  await apirecados.put(`/tasks/${idUser}/${task.id}`, task, { headers: { Authorization: `Bearer ${authorization}` } });
+  await apirecados.put(`/tasks/${idUser}/${task.idTask}`, task, { headers: { AuthToken: authorization } });
   return task;
 });
 
 export const deleteTask = createAsyncThunk('tasks/delete', async ({ idUser, idTask, authorization }:TDeleteTask) => {
-  await apirecados.delete(`/tasks/${idUser}/${idTask}`, { headers: { Authorization: `Bearer ${authorization}` } });
+  await apirecados.delete(`/tasks/${idUser}/${idTask}`, { headers: { AuthToken: authorization } });
   return idTask;
 });
 
@@ -66,10 +69,11 @@ const slice = createSlice({
       adapter.addOne(state, action.payload.data);
     });
     builder.addCase(getTasks.fulfilled, (state, action) => {
-      adapter.setAll(state, action.payload.data.tasks);
+      console.log(action.payload.data);
+      adapter.setAll(state, action.payload.data);
     });
     builder.addCase(updateTask.fulfilled, (state, { payload }) => {
-      adapter.updateOne(state, { id: payload.id, changes: payload });
+      adapter.updateOne(state, { id: payload.idTask, changes: payload });
     });
     builder.addCase(deleteTask.fulfilled, (state, { payload }) => {
       adapter.removeOne(state, payload);

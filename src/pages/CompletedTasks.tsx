@@ -1,47 +1,24 @@
-import { useEffect } from 'react';
 import {
   Button,
   ButtonGroup,
   Container, Divider,
   Grid, Typography,
 } from '@mui/material';
-
 import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import {
-  getTasks, taskAdapter,
+  taskAdapter,
 } from '../store/modules/tasks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { DialogCreateTask } from '../components/DialogCreateTask';
-import { CustomCard } from '../components/CustomCard';
 
-export function Home() {
+export function CompletedTasks() {
   const user = useAppSelector((state) => state.userLogged);
   const tasks = useAppSelector(taskAdapter.selectAll);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user.id) {
-      dispatch(getTasks({
-        idUser: user.id,
-        authorization: user.token,
-      }));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!user.id) {
-      navigate('/');
-    }
-  }, [user]);
-
-  const handleFavorite = () => {
-    navigate('/favorites');
-  };
-
-  const handleCompletedTasks = () => {
-    navigate('/completedTasks');
+  const handleAllTasks = () => {
+    navigate('/home');
   };
 
   return (
@@ -53,24 +30,17 @@ export function Home() {
         <Container sx={{ marginTop: '20px' }}>
 
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button onClick={handleFavorite}>RECADOS FAVORITOS</Button>
-            <Button onClick={handleCompletedTasks}>RECADOS FINALIZADOS</Button>
+            <Button onClick={handleAllTasks}>VOLTAR PARA TODOS OS RECADOS</Button>
           </ButtonGroup>
           <Typography variant="h5" marginTop={3}>Organize e gerencie sua agenda para deixar sua rotina mais tranquila.</Typography>
           <Divider />
-          <Grid container spacing={2} marginTop={3}>
-
-            {tasks.map((t) => (
-              <Grid key={t.idTask} item xs={12} sm={6} md={3}>
-                <CustomCard task={t} />
-              </Grid>
-
-            ))}
-
+          <Grid container gap={2} marginTop={3}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Typography>aqui tem que filtrar os recados concluídos</Typography>
+            </Grid>
           </Grid>
         </Container>
       </Grid>
-      <DialogCreateTask />
     </Grid>
   );
 }
