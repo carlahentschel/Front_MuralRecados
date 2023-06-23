@@ -33,17 +33,15 @@ export function FormSignin() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!user.id) {
+  const onSubmit: SubmitHandler<TLogin> = (data) => {
+    dispatch(userLogin(data));
+
+    /*  if (!user.id) {
       dispatch(setAlert({
         msg: 'Esta conta não existe.',
         type: 'error',
       }));
-    }
-  }, [user]);
-
-  const onSubmit: SubmitHandler<TLogin> = (data) => {
-    dispatch(userLogin(data));
+    } */
   };
 
   return (

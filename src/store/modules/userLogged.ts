@@ -1,23 +1,23 @@
-/* eslint-disable no-tabs */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { apirecados } from '../../service/api';
+import { setAlert } from './alert';
 
 type TUser = {
   id: string;
-	name: string;
-	token: string;
+  name: string;
+  token: string;
 };
 
 type TCreateUser = {
-	name: string;
-	email: string;
-	password: string;
-	passwordConfirm: string
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string
 }
 
 type TUserLogin = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export const createUser = createAsyncThunk('userLogged/createUser', async ({
@@ -29,9 +29,17 @@ export const createUser = createAsyncThunk('userLogged/createUser', async ({
   return response;
 });
 
-export const userLogin = createAsyncThunk('userLogged/login', async (data: TUserLogin) => {
-  const response = await apirecados.post('/auth', data);
-  return response;
+export const userLogin = createAsyncThunk('userLogged/login', async (data: TUserLogin, { dispatch }) => {
+  try {
+    const response = await apirecados.post('/auth', data);
+    return response;
+  } catch (error) {
+    dispatch(setAlert({
+      msg: 'Esta conta não existe.',
+      type: 'error',
+    }));
+    throw error;
+  }
 });
 
 export const slice = createSlice({
@@ -41,8 +49,7 @@ export const slice = createSlice({
     logout: () => ({ id: '', name: '', token: '' }),
   },
   extraReducers(builder) {
-    builder.addCase(createUser.fulfilled, (state, action) => {
-      // feedback pro usuário
+    builder.addCase(createUser.fulfilled, () => {
       window.location.href = '/';
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {

@@ -34,11 +34,22 @@ export const CustomCard = ({ task } : CustomCardProps) => {
   const handleFavorite = () => {
     dispatch(updateTask({
       idUser: user.id,
+      idTask: task.idTask,
       authorization: user.token,
       task: {
-        favorite: !favorite,
+        favorite: !task.favorite,
       },
+    }));
+  };
 
+  const handleFinished = () => {
+    dispatch(updateTask({
+      idUser: user.id,
+      idTask: task.idTask,
+      authorization: user.token,
+      task: {
+        finished: !task.finished,
+      },
     }));
   };
 
@@ -57,7 +68,7 @@ export const CustomCard = ({ task } : CustomCardProps) => {
 
       </CardContent>
       <CardActions>
-        <IconButton>
+        <IconButton onClick={handleFinished}>
           {task.finished ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
         </IconButton>
 

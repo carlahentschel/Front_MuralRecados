@@ -8,9 +8,9 @@ import { setAlert } from '../store/modules/alert';
 
 const schemaCreateAccount = z.object({
   email: z.string().email(),
-  name: z.string().nonempty(),
-  password: z.string().min(6, 'Senha menor que 6 dígitos'),
-  passwordConfirm: z.string().min(6, 'Senha menor que 6 dígitos'),
+  name: z.string().nonempty().min(3, 'O nome deve ter no mínimo 3 letras.'),
+  password: z.string().min(6, 'Senha menor que 6 dígitos.'),
+  passwordConfirm: z.string().min(6, 'Senha menor que 6 dígitos.'),
 })
   .refine(
     ({ password, passwordConfirm }) => password === passwordConfirm,
@@ -68,7 +68,6 @@ export function FormSignup() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 {...register('name')}
               />
-              {/* add error */}
               {errors.name && (
                 <span className="text-red-500">{errors.name.message}</span>
               )}
@@ -88,7 +87,6 @@ export function FormSignup() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 {...register('email')}
               />
-              {/* add error */}
               {errors.email && (
                 <span className="text-red-500">{errors.email.message}</span>
               )}
@@ -112,7 +110,6 @@ export function FormSignup() {
                 {...register('password')}
               />
 
-              {/* add error */}
               {errors.password && (
                 <span className="text-red-500">
                   {errors.password.message}
@@ -137,7 +134,6 @@ export function FormSignup() {
                 {...register('passwordConfirm')}
               />
 
-              {/* add error */}
               {errors.passwordConfirm && (
                 <span className="text-red-500">
                   {errors.passwordConfirm.message}

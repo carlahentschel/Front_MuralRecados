@@ -26,7 +26,8 @@ type TRequestGet = {
 
 type TUpdateTask = {
     idUser: string,
-    task: TTask,
+    idTask: string,
+    task: Partial<TTask>,
     authorization: string
 }
 
@@ -50,9 +51,11 @@ export const getTasks = createAsyncThunk('tasks/get', async ({ idUser, authoriza
   return response;
 });
 
-export const updateTask = createAsyncThunk('tasks/update', async ({ idUser, task, authorization }:TUpdateTask) => {
-  await apirecados.put(`/tasks/${idUser}/${task.idTask}`, task, { headers: { AuthToken: authorization } });
-  return task;
+export const updateTask = createAsyncThunk('tasks/update', async ({
+  idUser, idTask, task, authorization,
+}:TUpdateTask) => {
+  await apirecados.put(`/tasks/${idUser}/${idTask}`, task, { headers: { AuthToken: authorization } });
+  return { task, idTask };
 });
 
 export const deleteTask = createAsyncThunk('tasks/delete', async ({ idUser, idTask, authorization }:TDeleteTask) => {
@@ -69,11 +72,12 @@ const slice = createSlice({
       adapter.addOne(state, action.payload.data);
     });
     builder.addCase(getTasks.fulfilled, (state, action) => {
-      console.log(action.payload.data);
       adapter.setAll(state, action.payload.data);
     });
     builder.addCase(updateTask.fulfilled, (state, { payload }) => {
-      adapter.updateOne(state, { id: payload.idTask, changes: payload });
+      console.log(payload);
+
+      adapter.updateOne(state, { id: payload.idTask, changes: payload.task });
     });
     builder.addCase(deleteTask.fulfilled, (state, { payload }) => {
       adapter.removeOne(state, payload);

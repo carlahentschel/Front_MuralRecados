@@ -5,7 +5,6 @@ import {
   Container, Divider,
   Grid, Typography,
 } from '@mui/material';
-
 import { useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import {
@@ -56,10 +55,9 @@ export function Home() {
             <Button onClick={handleFavorite}>RECADOS FAVORITOS</Button>
             <Button onClick={handleCompletedTasks}>RECADOS FINALIZADOS</Button>
           </ButtonGroup>
-          <Typography variant="h5" marginTop={3}>Organize e gerencie sua agenda para deixar sua rotina mais tranquila.</Typography>
+          <Typography variant="h5" marginTop={3} marginBottom={1}>Organize e gerencie sua agenda para deixar sua rotina mais tranquila!</Typography>
           <Divider />
           <Grid container spacing={2} marginTop={3}>
-
             {tasks.map((t) => (
               <Grid key={t.idTask} item xs={12} sm={6} md={3}>
                 <CustomCard task={t} />
