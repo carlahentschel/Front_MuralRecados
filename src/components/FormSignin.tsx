@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userLogin } from '../store/modules/userLogged';
-import { setAlert } from '../store/modules/alert';
 
 const schemaLogin = z.object({
   email: z.string().email(),
@@ -35,13 +34,6 @@ export function FormSignin() {
 
   const onSubmit: SubmitHandler<TLogin> = (data) => {
     dispatch(userLogin(data));
-
-    /*  if (!user.id) {
-      dispatch(setAlert({
-        msg: 'Esta conta não existe.',
-        type: 'error',
-      }));
-    } */
   };
 
   return (

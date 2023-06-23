@@ -25,6 +25,7 @@ export const DialogEditTask = ({ task, open, handleClose }: DialogTaskProp) => {
   const handleEdit = () => {
     dispatch(updateTask({
       idUser: user.id,
+      idTask: task.idTask,
       task: taskEdited,
       authorization: user.token,
     }));
