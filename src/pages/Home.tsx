@@ -53,7 +53,7 @@ export function Home() {
 
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button onClick={handleFavorite}>RECADOS FAVORITOS</Button>
-            <Button onClick={handleCompletedTasks}>RECADOS FINALIZADOS</Button>
+            <Button onClick={handleCompletedTasks}>RECADOS CONCLUÍDOS</Button>
           </ButtonGroup>
           <Typography variant="h5" marginTop={3} marginBottom={1}>Organize e gerencie sua agenda para deixar sua rotina mais tranquila!</Typography>
           <Divider />
@@ -62,7 +62,6 @@ export function Home() {
               <Grid key={t.idTask} item xs={12} sm={6} md={4} lg={3}>
                 <CustomCard task={t} />
               </Grid>
-
             ))}
 
           </Grid>

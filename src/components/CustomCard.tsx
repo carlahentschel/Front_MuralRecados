@@ -10,9 +10,10 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { TTask, deleteTask, updateTask } from '../store/modules/tasks';
+import { TTask, updateTask } from '../store/modules/tasks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { DialogEditTask } from './DialogEditTask';
+import { DialogDeleteTask } from './DialogDeleteTask';
 
 interface CustomCardProps {
     task: TTask
@@ -21,15 +22,8 @@ interface CustomCardProps {
 export const CustomCard = ({ task } : CustomCardProps) => {
   const user = useAppSelector((state) => state.userLogged);
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
   const dispatch = useAppDispatch();
-
-  const handleDelete = (id: string) => {
-    dispatch(deleteTask({
-      idTask: id,
-      idUser: user.id,
-      authorization: user.token,
-    }));
-  };
 
   const handleFavorite = () => {
     dispatch(updateTask({
@@ -79,7 +73,7 @@ export const CustomCard = ({ task } : CustomCardProps) => {
         <IconButton onClick={() => setOpenModalEdit(true)} color="success">
           <EditIcon />
         </IconButton>
-        <IconButton onClick={() => handleDelete(task.idTask)} color="warning">
+        <IconButton onClick={() => setOpenModalDelete(true)} color="warning">
           <DeleteIcon />
         </IconButton>
 
@@ -88,6 +82,11 @@ export const CustomCard = ({ task } : CustomCardProps) => {
         open={openModalEdit}
         task={task}
         handleClose={() => setOpenModalEdit(false)}
+      />
+      <DialogDeleteTask
+        open={openModalDelete}
+        task={task}
+        handleClose={() => setOpenModalDelete(false)}
       />
     </Card>
   );
