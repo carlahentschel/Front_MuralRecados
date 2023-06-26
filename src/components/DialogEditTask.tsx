@@ -26,7 +26,7 @@ export const DialogEditTask = ({ task, open, handleClose }: DialogTaskProp) => {
     dispatch(updateTask({
       idUser: user.id,
       idTask: task.idTask,
-      task: taskEdited,
+      task: { title: taskEdited.title, description: taskEdited.description, date: taskEdited.date },
       authorization: user.token,
     }));
     handleClose();
@@ -34,15 +34,19 @@ export const DialogEditTask = ({ task, open, handleClose }: DialogTaskProp) => {
       msg: 'Recado editado com sucesso!',
       type: 'success',
     }));
-
-    resetForm();
   };
+
   const handleSetDate = (date: Dayjs | null) => {
     setTaskEdited((state) => ({ ...state, date: date?.toDate() as Date }));
   };
 
+  const handleCancel = () => {
+    resetForm();
+    handleClose();
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleCancel}>
       <DialogTitle>Editar recado:</DialogTitle>
       <DialogContent>
         <TextField
@@ -70,7 +74,7 @@ export const DialogEditTask = ({ task, open, handleClose }: DialogTaskProp) => {
         <DatePickerValue date={dayjs(taskEdited.date)} setDate={handleSetDate} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancelar</Button>
+        <Button onClick={handleCancel}>Cancelar</Button>
         <Button onClick={handleEdit}>Editar</Button>
       </DialogActions>
     </Dialog>
